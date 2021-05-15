@@ -1,0 +1,20 @@
+
+<form class="example-form">
+
+    <mat-form-field focus class="example-full-width" color="primary" appearance="outline" >
+
+      <mat-label>Timezone:</mat-label>
+      <mat-placeholder class="custom_placeholder">Escolha uma timezone</mat-placeholder>
+      <input matInput type="text" aria-label="Number" [formControl]="timezoneAreasControl" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of timezoneAreasFilteredOptions | async" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <button mat-icon-button color="warn" [disabled]="isDisableButton" type="button" >
+      <mat-icon>favorite</mat-icon>
+    </button>
+
+</form>
