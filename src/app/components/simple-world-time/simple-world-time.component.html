@@ -17,13 +17,12 @@
   </button>
 
   <br/>
-  <br/>
 
   <mat-card *ngIf="timeSelected">
     <h2>{{ timeSelected?.timezone }}</h2>
     <h5>{{  'GMT: ' + timeSelected?.GMT  }}</h5>
     <br/>
-    <h3 *ngIf="timeSelected?.timeValue" [style]="{ 'color': 'red'}" >{{  'Local Current Time: ' + timeSelected?.timeValue  }}</h3>
+    <h3 *ngIf="isEnableClock" [style]="{ 'color': 'red'}" >{{  'Local Current Time: ' + timeSelected?.timeValue  }}</h3>
   </mat-card>
 
 </form>

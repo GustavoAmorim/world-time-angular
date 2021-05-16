@@ -16,9 +16,11 @@ export class SimpleWorldTimeComponent implements OnInit {
 
   readonly DATETIME_LOCALE = 'pt';
   readonly DATETIME_PIPE_MASK ='mediumTime';
+  readonly TIME_VALUE_PROP ='timeValue';
 
   private _timeSelected;
   private _datePipe: DatePipe;
+  private _intervalClock;
 
   private _timezoneAreasControl: FormControl;
   private _timezoneAreasOptions: any[];
@@ -54,12 +56,25 @@ export class SimpleWorldTimeComponent implements OnInit {
     this._datePipe = new DatePipe(this.DATETIME_LOCALE);
   }
 
+  public formatDate(date) {
+
+    return this.datePipe.transform(date, this.DATETIME_PIPE_MASK, 'GMT' + this.timeSelected.GMT);
+  }
+
   public onClickGetTime() {
 
     if (this.timeSelected && this.timeSelected.GMT) {
 
-    const today = new Date();
-    this._timeSelected['timeValue'] = this.datePipe.transform(today, this.DATETIME_PIPE_MASK, 'GMT' + this.timeSelected.GMT);
+      clearInterval(this._intervalClock);
+      const today = new Date();
+      this._timeSelected[this.TIME_VALUE_PROP] = this.formatDate(today);
+
+      this._intervalClock = setInterval(() => {
+
+        const today = new Date();
+        this._timeSelected[this.TIME_VALUE_PROP] = this.formatDate(today);
+
+      }, 1000);
 
 /* USING API
       this.worldtimeService.getCurrentTimeLocation(this.timezoneAreasControl.value)
@@ -137,6 +152,18 @@ export class SimpleWorldTimeComponent implements OnInit {
     if (!this.timezoneAreasControl.value
         || (this.timezoneAreasControl.value && !this._find(this.timezoneAreasControl.value))) {
       return true;
+    }
+
+    return false;
+  }
+
+  get isEnableClock() {
+
+    if (this.timeSelected && this.timeSelected[this.TIME_VALUE_PROP]) {
+      return true;
+    } else {
+
+      clearInterval(this._intervalClock);
     }
 
     return false;
