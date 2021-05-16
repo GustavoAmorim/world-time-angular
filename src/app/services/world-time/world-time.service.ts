@@ -1,7 +1,8 @@
+import { FakeBackendData } from './fake-backend-data';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
 @Injectable({
@@ -19,7 +20,8 @@ export class WorldTimeService {
 
     return {
         headers: new HttpHeaders({
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Headers': '*'
       })
     };
   }
@@ -45,18 +47,21 @@ export class WorldTimeService {
 
   getTimezones (): Observable<any> {
 
-    return this.httpClient.get<any>(this.API_ENDPOINT)
+    return of(FakeBackendData.timezonesGMT());
+/*  USING API
+    return this.httpClient.get<any>(this.API_ENDPOINT, this.httpHeader())
       .pipe(
-        retry(1),
+        retry(3),
         catchError(this.httpError)
     );
+*/
   }
 
   getAreaTimezones (area: string): Observable<any> {
 
-    return this.httpClient.get<any>(this.API_ENDPOINT + '/' + area)
+    return this.httpClient.get<any>(this.API_ENDPOINT + '/' + area, this.httpHeader())
       .pipe(
-        retry(1),
+        retry(3),
         catchError(this.httpError)
     );
   }
@@ -65,7 +70,7 @@ export class WorldTimeService {
 
     return this.httpClient.get<any>(this.API_ENDPOINT + '/' + areaLocation, this.httpHeader())
       .pipe(
-        retry(1),
+        retry(3),
         catchError(this.httpError)
     );
   }
